@@ -1,32 +1,31 @@
 package com.example.todo.repository;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import com.example.todo.TestConfig;
 import com.example.todo.model.Task;
+import com.example.todo.spring.TodoApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-@DataJpaTest
+@Transactional
+@SpringBootTest(classes = {TodoApplication.class, TestConfig.class})
 class TaskRepositoryTest {
 
     @Autowired
-    private TaskRepository taskRepository;
+    public TaskRepository taskRepository;
 
     @Test
-    void shouldSaveAndRetrieveTask() {
-        // Przygotowanie danych testowych
-        Task task = new Task("Example Task", false);
-
-        // Zapis zadania do repozytorium
+    void saveTask() {
+        Task task = new Task("Test Task", false);
         taskRepository.save(task);
 
-        // Pobranie zadania z repozytorium
-        Task retrievedTask = taskRepository.findById(task.getId()).orElse(null);
-
-        // Sprawdzenie, czy zadanie zostało poprawnie zapisane i odczytane
-        assertThat(retrievedTask).isNotNull();
-        assertThat(retrievedTask.getTitle()).isEqualTo("Example Task");
-        assertThat(retrievedTask.isCompleted()).isFalse();
+        Task savedTask = taskRepository.findById(task.getId()).orElse(null);
+        assertNotNull(savedTask);
+        assertEquals("Test Task", savedTask.getTitle());
+        assertEquals(false, savedTask.isCompleted());
     }
 }
