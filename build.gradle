@@ -1,14 +1,16 @@
 plugins {
+	id 'org.springframework.boot' version '2.7.2'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
-	id 'org.springframework.boot' version '3.2.0'
-	id 'io.spring.dependency-management' version '1.1.4'
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '17'
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
 }
 
 repositories {
@@ -16,10 +18,42 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'com.h2database:h2' // Dodaj zależność do bazy H2
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-tasks.named('test') {
+// Dodaj konfigurację dla testów
+test {
 	useJUnitPlatform()
+}
+
+// Konfiguracja dla H2
+configure(allprojects) {
+	apply plugin: 'java'
+
+	sourceSets {
+		main {
+			java {
+				srcDirs = ['src/main/java', 'src/main/resources']
+			}
+		}
+	}
+
+	tasks.named('bootRun').configure {
+		mainClassName = 'com.example.todo.spring.Application'
+	}
+
+	// Dodaj task dla H2 Console
+	task createH2ConsoleDirectory {
+		doLast {
+			file("$buildDir/h2-console").mkdirs()
+		}
+	}
+
+	task h2Console(type: JavaExec, dependsOn: 'createH2ConsoleDirectory') {
+		classpath = sourceSets.main.runtimeClasspath
+		main = 'org.h2.tools.Console'
+		args '-web', '-webAllowOthers', '-tcp', '-tcpAllowOthers', '-ifNotExists', '-baseDir', "$buildDir/h2-console"
+	}
 }
