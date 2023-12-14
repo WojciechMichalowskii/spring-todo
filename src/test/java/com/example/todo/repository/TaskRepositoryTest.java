@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.example.todo.TestConfig;
 import com.example.todo.model.Task;
-import com.example.todo.spring.TodoApplication;
+import com.example.todo.TodoApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

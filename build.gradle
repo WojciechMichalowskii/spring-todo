@@ -2,7 +2,6 @@ plugins {
 	id 'org.springframework.boot' version '2.7.2'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
-	id 'org.jetbrains.kotlin.jvm' version '1.5.21'
 }
 
 group = 'com.example'
@@ -47,12 +46,10 @@ configure(allprojects) {
 			}
 		}
 	}
-
-	tasks.named('bootRun').configure {
-		mainClassName = 'com.example.todo.spring.Application'
+	springBoot {
+		mainClass = 'com.example.todo.TodoApplication'
 	}
 
-	// Dodaj task dla H2 Console
 	task createH2ConsoleDirectory {
 		doLast {
 			file("$buildDir/h2-console").mkdirs()

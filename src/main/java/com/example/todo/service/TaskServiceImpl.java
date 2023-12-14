@@ -34,7 +34,7 @@ public class TaskServiceImpl implements TaskService {
     public Task createTask(TaskDto taskDto) {
         Task newTask = new Task();
         newTask.setTitle(taskDto.getTitle());
-        newTask.setCompleted(false);
+        newTask.setCompleted(taskDto.isCompleted());
         return taskRepository.save(newTask);
     }
 

@@ -4,8 +4,6 @@ public class TaskDto {
     private String title;
     private boolean completed;
 
-    // Getters and setters
-
     public String getTitle() {
         return title;
     }
